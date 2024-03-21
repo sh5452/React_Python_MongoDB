@@ -1,0 +1,6 @@
+.link1{
+
+ justify-content: space-between;
+ display: flex;
+ flex-direction: row;
+}
