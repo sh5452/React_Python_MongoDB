@@ -4,7 +4,7 @@ from bson import ObjectId
 from flask import request
 class UsersBll:
     def __init__(self):
-        self.__uri='mongodb://shlomit5452:shk1234@ac-1nwpds7-shard-00-00.faecgrb.mongodb.net:27017,ac-1nwpds7-shard-00-01.faecgrb.mongodb.net:27017,ac-1nwpds7-shard-00-02.faecgrb.mongodb.net:27017/?ssl=true&replicaSet=atlas-axv6o2-shard-0&authSource=admin&retryWrites=true&w=majority'
+        self.__uri='mongodb+srv://shlomit5452:shk1234@cluster0.faecgrb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
         self.__client=MongoClient(self.__uri)
         self.__db=self.__client['usersProjects']
         self.__users_collection=self.__db['usersDB']
@@ -35,7 +35,7 @@ class UsersBll:
         return users_list
     def add_user(self,user):
         result = self.__users_collection.insert_one(user)
-        
+
         return {'status': 'Created', 'id': str(result.inserted_id)}
     
     def update_user(self, id, user):
