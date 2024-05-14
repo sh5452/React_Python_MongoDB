@@ -1,7 +1,7 @@
-
 from flask import Flask
 from routers.movies_router import movies
 from routers.users_router import users
+from routers.auth_router import auth_route
 from bson import ObjectId
 import json
 from flask_cors import CORS
@@ -23,6 +23,7 @@ app.json_encoder= CustomJSONEncoder
 
 app.register_blueprint(movies, url_prefix='/movies')
 app.register_blueprint(users, url_prefix='/users')
+app.register_blueprint(auth_route,url_prefix='/auth')
 
 app.run()
 

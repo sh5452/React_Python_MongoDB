@@ -5,7 +5,7 @@ import requests
 
 class MoviesBll:
     def __init__(self):
-        self.__uri="mongodb://shlomit5452:shk1234@ac-1nwpds7-shard-00-00.faecgrb.mongodb.net:27017,ac-1nwpds7-shard-00-01.faecgrb.mongodb.net:27017,ac-1nwpds7-shard-00-02.faecgrb.mongodb.net:27017/?ssl=true&replicaSet=atlas-axv6o2-shard-0&authSource=admin&retryWrites=true&w=majority"
+        self.__uri="mongodb+srv://shlomit5452:shk1234@cluster0.faecgrb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
         self.__client = MongoClient(self.__uri)
         self.__db=self.__client['moviesProject']
         self.__movies_collection=self.__db["movie"]
@@ -13,8 +13,9 @@ class MoviesBll:
         
        
     def get_all_movies(self):
-        
-        # resp = requests.get("https://api.tvmaze.com/shows")
+        # token = sessionStorage["token"]
+        # return token
+        # resp = requests.get("https://api.tvmaze.com/shows", {heders:{'x-access-token':token}}})
         # if not resp.ok:
         #   return []
         # else:

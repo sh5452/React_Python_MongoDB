@@ -17,6 +17,7 @@ function AllMovies() {
 
     const movies = useSelector((state) => state.movies)
     const deleteM =async ()=>{
+      
       const movie=  
       // await createMovie(newMovie) 
       dispatch(deleteMovieAction(movies.id))

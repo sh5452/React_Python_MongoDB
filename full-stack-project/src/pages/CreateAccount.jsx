@@ -1,6 +1,7 @@
 import React from 'react'
 
 function CreateAccount() {
+
   return (
     <div>
         <label htmlFor="">
@@ -9,7 +10,7 @@ function CreateAccount() {
         <label htmlFor="">
             Password: <input type="password" />
         </label>
-        <button>Create</button>
+        <button onClick={create}>Create</button>
     </div>
   )
 }
