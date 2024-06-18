@@ -1,18 +1,20 @@
-from bll.auth_bll import AuthBLL
-from flask import Blueprint, jsonify, request, make_response
+from flask import Blueprint, request, jsonify
+import jwt
+import datetime
 
-auth_bll = AuthBLL()
+auth_route = Blueprint('auth_route', __name__)
 
-auth_route = Blueprint("auth", __name__)
+SECRET_KEY = 'YOUR_SECRET_KEY'
 
-
-@auth_route.route("/login", methods=["POST"])
+@auth_route.route('/login', methods=['POST'])
 def login():
-    username = request.json['username']
-    password = request.json["password"]
-    token = auth_bll.get_token(username, password)
-
-    if token is not None:
-        return make_response({"token": token}, 200)
-    else:
-        return make_response({"error": "Not Authorized"}, 401)
+    # כאן אמור להיות קוד לבדיקת פרטי המשתמש וליצירת הטוקן
+    
+    # הנחה שאנחנו יוצרים טוקן עבור משתמש עם user_id
+    user_id = 'user_id'
+    
+    token = jwt.encode({'userId': user_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)}, SECRET_KEY, algorithm='HS256')
+    
+    print(f"Generated token: {token}")
+    
+    return jsonify({'token': token}), 200

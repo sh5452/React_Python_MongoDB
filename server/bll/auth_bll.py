@@ -1,5 +1,6 @@
-import jwt
 
+import jwt
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 
 class AuthBLL:
     def __init__(self):
@@ -11,17 +12,23 @@ class AuthBLL:
         token = None
         if user_id is not None:
             token = jwt.encode({"userId": user_id}, self.__key, self.__algorithm)
+        print(f"Generated token: {token}")  # Log the generated token
         return token
 
     def verify_token(self, token):
-        data = jwt.decode(token, self.__key ,self.__algorithm)
-                          
-        user_id = data["userId"]
-        # check if the user exists...
-
-        return True
+        try:
+            data = jwt.decode(token, self.__key, algorithms=[self.__algorithm])
+            user_id = data["userId"]
+            print(f"Decoded token data: {data}")  # Log the decoded data
+            # בדוק אם המשתמש קיים...
+            return True
+        except ExpiredSignatureError:
+            print("Token has expired")
+            return False
+        except InvalidTokenError:
+            print("Invalid token")
+            return False
 
     def __check_user(self, username, password):
-        # check if user exits in users db
-        return "user_id"
-    
+        # בדוק אם המשתמש קיים בבסיס הנתונים
+        return "user_id" if username == "test" and password == "test" else None

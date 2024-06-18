@@ -6,24 +6,21 @@ from bson import ObjectId
 import json
 from flask_cors import CORS
 
-
-
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
-        if (isinstance(obj, ObjectId)):
+        if isinstance(obj, ObjectId):
             return str(obj)
-        return json.JSONEncoder.default(self,obj)
-
+        return json.JSONEncoder.default(self, obj)
 
 app = Flask(__name__)
 CORS(app)
 app.url_map.strict_slashes = False
 
-app.json_encoder= CustomJSONEncoder
+app.json_encoder = CustomJSONEncoder
 
 app.register_blueprint(movies, url_prefix='/movies')
 app.register_blueprint(users, url_prefix='/users')
-app.register_blueprint(auth_route,url_prefix='/auth')
+app.register_blueprint(auth_route, url_prefix='/auth')
 
-app.run()
-
+if __name__ == "__main__":
+    app.run()

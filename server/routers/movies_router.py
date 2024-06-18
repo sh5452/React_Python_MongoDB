@@ -1,59 +1,44 @@
-from flask import Blueprint, jsonify,request, Response, make_response
-from bll.movies_bll import MoviesBll
-import json
+from flask import Blueprint, request, jsonify
+from pymongo import MongoClient
 from bson import ObjectId
-import logging
-from bll.auth_bll import AuthBLL
+import jwt
 
-movies=Blueprint('movies',__name__)
+movies = Blueprint('movies', __name__)
 
-movies_bll=MoviesBll()
-auth_bll=AuthBLL()
+# ההתחברות למסד הנתונים
+client = MongoClient('localhost', 27017)
+db = client.movie_database
+movies_collection = db.movies
 
-class CustomJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, ObjectId):
-            return str(obj)
-        return super().default(obj)
+SECRET_KEY = 'YOUR_SECRET_KEY'
 
-@movies.route('/',methods=['GET'])
+@movies.route('/', methods=['GET'])
 def get_all_movies():
-    if request.headers and request.headers.get("x-access-token"):
-        token=request.headers.get("x-access-token")
-        exist=auth_bll.verify_token(token)
-        if exist==True:
-            movies=movies_bll.get_all_movies()
-            return make_response({"movies":movies},200)
-        else:
-            return make_response({"error":"not Authorized"},401)
-    else:
-        return make_response({"error":"not Authorized"},401)
-    
+    token = request.headers.get('x-access-token')
+    if not token:
+        return jsonify({"error": "No token provided"}), 401
 
-@movies.route('/<id>/', methods=['GET'])
-def get_movie_by_id(id):
-    movie = movies_bll.get_movie_by_id(id)
-    if 'error' in movie:
-        return jsonify(movie), 404
-    else:
-        return jsonify(movie), 200
-    
+    try:
+        print(f"Received token: {token}")
+        print(f"Using secret key: {SECRET_KEY}")
+        data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        print(f"Decoded token data: {data}")
+        user_id = data['userId']
 
-@movies.route('/',methods=['POST'])
-def add_movie():
-    movieDetails=request.json
-    requestStatus=movies_bll.add_movie(movieDetails)
-    return Response(json.dumps(requestStatus)) 
+        # שליפת הסרטים מתוך מסד הנתונים
+        movies = movies_collection.find({"userId": user_id})
+        
+        # המרת ObjectId למחרוזת
+        movie_list = []
+        for movie in movies:
+            movie['_id'] = str(movie['_id'])
+            movie_list.append(movie)
 
-@movies.route('/<id>/', methods=['PUT'])
-def update_movie(id):
-    movie_data = request.json
-    logging.debug(f'Updating user {id} with data: {movie_data}')
-    result, status = movies_bll.update_movie(id, movie_data)
-    return jsonify(result), status
-
-
-@movies.route('/<id>/', methods=['DELETE'])
-def delete_movie(id):
-    result=movies_bll.delete_movie(id)
-    return jsonify(result)
+        return jsonify({"movies": movie_list}), 200
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "Token has expired"}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({"error": "Invalid token"}), 401
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
