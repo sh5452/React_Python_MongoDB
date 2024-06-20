@@ -1,6 +1,6 @@
 import React from 'react'
 
-function CreateAccount() {
+function CreateAcount() {
 
   return (
     <div>
@@ -15,4 +15,4 @@ function CreateAccount() {
   )
 }
 
-export default CreateAccount
+export default CreateAcount

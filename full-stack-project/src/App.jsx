@@ -17,6 +17,7 @@ import appStore from './store'
 import AddUser from './pages/AddUser'
 import AllUsers from './pages/AllUsers'
 import EditUser from './pages/EditUser'
+import MoviesComponent from './pages/MoviesComponent'
 
 
 
@@ -34,6 +35,7 @@ function App() {
     <Routes>
      
       <Route path='/' element={<Layout/>}> 
+      <Route path='/moviesComponent' element={<MoviesComponent/>}/>
       <Route path='/moviesData' element ={<Movies/>} >
         <Route path='add' element={<AddMovie/>}/>
         <Route path='all' element={<AllMovies/>}/>
