@@ -1,10 +1,11 @@
-from flask import Flask
-from routers.movies_router import movies
-from routers.users_router import users
-from routers.auth_router import auth_route
+from flask import Flask, request, jsonify
+from functools import wraps
+from flask_cors import CORS
+from bll.movies_bll import MoviesBll
 from bson import ObjectId
 import json
-from flask_cors import CORS
+from bll.auth_bll import AuthBLL
+from routers.auth_router import auth_route
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -14,13 +15,73 @@ class CustomJSONEncoder(json.JSONEncoder):
 
 app = Flask(__name__)
 CORS(app)
-app.url_map.strict_slashes = False
-
+SECRET_KEY = "iyXMaPrYGDcCcetxXcGyYPRVrT7Zwgip"
+app.config['SECRET_KEY'] = SECRET_KEY
 app.json_encoder = CustomJSONEncoder
 
-app.register_blueprint(movies, url_prefix='/movies')
-app.register_blueprint(users, url_prefix='/users')
+auth_bll = AuthBLL()
+movies_bll = MoviesBll()
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+        if not token:
+            return jsonify({'error': 'Token is missing!'}), 401
+        try:
+            data = auth_bll.verify_token(token)
+            if not data:
+                return jsonify({'error': 'Invalid token!'}), 401
+            current_user_id = data['userId']
+        except Exception as e:
+            return jsonify({'error': 'Invalid token!'}), 401
+        return f(current_user_id, *args, **kwargs)
+    return decorated
+
+# Movies Routes
+@app.route('/movies', methods=['GET'])
+@token_required
+def get_all_movies(current_user_id):
+    movies = movies_bll.get_all_movies()
+    return jsonify(movies), 200
+
+@app.route('/movies/<movie_id>', methods=['GET'])
+@token_required
+def get_movie(current_user_id, movie_id):
+    movie = movies_bll.get_movie_by_id(movie_id)
+    if movie:
+        return jsonify(movie), 200
+    else:
+        return jsonify({'error': 'Movie not found'}), 404
+
+@app.route('/movies', methods=['POST'])
+@token_required
+def add_movie(current_user_id):
+    return jsonify({'message': "This operation is not supported."}), 405
+
+@app.route('/movies/<movie_id>', methods=['PUT'])
+@token_required
+def update_movie(current_user_id, movie_id):
+    return jsonify({'message': "This operation is not supported."}), 405
+
+@app.route('/movies/<movie_id>', methods=['DELETE'])
+@token_required
+def delete_movie(current_user_id, movie_id):
+    return jsonify({'message': "This operation is not supported."}), 405
+
+# Auth Routes
+@app.route('/auth/login', methods=['POST'])
+def login():
+    auth_data = request.get_json()
+    token = auth_bll.get_token(auth_data['username'], auth_data['password'])
+    if token:
+        return jsonify({'token': token}), 200
+    else:
+        return jsonify({'error': 'Invalid credentials'}), 401
+
 app.register_blueprint(auth_route, url_prefix='/auth')
 
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    app.run(debug=True)

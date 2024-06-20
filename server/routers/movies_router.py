@@ -9,8 +9,7 @@ movies = Blueprint('movies', __name__)
 client = MongoClient('localhost', 27017)
 db = client.movie_database
 movies_collection = db.movies
-
-SECRET_KEY = 'YOUR_SECRET_KEY'
+SECRET_KEY = "iyXMaPrYGDcCcetxXcGyYPRVrT7Zwgip"
 
 @movies.route('/', methods=['GET'])
 def get_all_movies():
