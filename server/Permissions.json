@@ -1,0 +1,13 @@
+[
+    {
+      "Id": "1",
+      "Permissions": [
+        "View Subscriptions",
+        "Create Subscriptions",
+        "Delete Subscriptions",
+        "View Movies",
+        "Create Movies",
+        "Delete Movies"
+      ]
+    }
+  ]

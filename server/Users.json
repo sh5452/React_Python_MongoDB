@@ -1,0 +1,9 @@
+[
+    {
+      "Id": "1",
+      "FirstName": "Admin",
+      "LastName": "User",
+      "CreatedDate": "2023-01-01",
+      "SessionTimeOut": 30
+    }
+  ]

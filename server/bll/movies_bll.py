@@ -5,8 +5,8 @@ class MoviesBll:
     def __init__(self):
         self.api_url = "https://api.tvmaze.com/shows"
         self.client = MongoClient('mongodb://localhost:27017/')
-        self.db = self.client['movies_db']
-        self.collection = self.db['movies']
+        self.db = self.client['moviesProject']
+        self.collection = self.db['movie']
 
     def fetch_and_store_movies(self):
         response = requests.get(self.api_url)
