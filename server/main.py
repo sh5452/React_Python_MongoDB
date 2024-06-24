@@ -9,14 +9,14 @@ from bll.auth_bll import AuthBLL
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, ObjectId):
-            return str(obj)
+            return str(obj)  # Convert ObjectId to string
         return json.JSONEncoder.default(self, obj)
 
 app = Flask(__name__)
 CORS(app)
 SECRET_KEY = "iyXMaPrYGDcCcetxXcGyYPRVrT7Zwgip"
 app.config['SECRET_KEY'] = SECRET_KEY
-app.json_encoder = CustomJSONEncoder
+app.json_encoder = CustomJSONEncoder  # Set the custom JSON encoder
 
 auth_bll = AuthBLL()
 movies_bll = MoviesBll()
