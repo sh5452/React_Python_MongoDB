@@ -1,11 +1,10 @@
 from flask import Flask, request, jsonify
 from functools import wraps
 from flask_cors import CORS
-from bll.movies_bll import MoviesBll
 from bson import ObjectId
 import json
+from bll.movies_bll import MoviesBll
 from bll.auth_bll import AuthBLL
-from routers.auth_router import auth_route
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -75,13 +74,11 @@ def delete_movie(current_user_id, movie_id):
 @app.route('/auth/login', methods=['POST'])
 def login():
     auth_data = request.get_json()
-    token = auth_bll.get_token(auth_data['username'], auth_data['password'])
+    token = auth_bll.get_token(auth_data['UserName'], auth_data['Password'])
     if token:
         return jsonify({'token': token}), 200
     else:
         return jsonify({'error': 'Invalid credentials'}), 401
-
-app.register_blueprint(auth_route, url_prefix='/auth')
 
 if __name__ == '__main__':
     app.run(debug=True)
