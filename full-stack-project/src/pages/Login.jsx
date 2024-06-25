@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -61,8 +62,12 @@ function Login() {
         <button type="submit" style={{ marginBottom: 3 }}>Login</button>
       </form>
       <br />
-      New User? : <Link to='create_account'>Create Account</Link>
-    </div>
+      New User? :<Link to='createAcount'>Create Account</Link>
+     
+      <Outlet/> 
+    
+    </div> 
+   
   );
 }
 

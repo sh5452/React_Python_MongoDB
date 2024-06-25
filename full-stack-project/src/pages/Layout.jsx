@@ -11,7 +11,7 @@ function Layout() {
         <Link to='menagment'>Users Management</Link>
         <Link to='logout'>Log Out</Link>
       </div>
-      <Login /> {/* שימוש בקומפוננטת Login */}
+      <Login /> 
       <Outlet />
     </>
   );
