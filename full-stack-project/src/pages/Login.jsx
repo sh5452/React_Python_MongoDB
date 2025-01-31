@@ -62,9 +62,9 @@ function Login() {
         <button type="submit" style={{ marginBottom: 3 }}>Login</button>
       </form>
       <br />
-      New User? :<Link to='createAcount'>Create Account</Link>
+      New User?: <Link to='createAccount'>Create Account</Link>
      
-      <Outlet/> 
+    
     
     </div> 
    

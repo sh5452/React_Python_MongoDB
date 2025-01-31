@@ -18,7 +18,7 @@ import AddUser from './pages/AddUser'
 import AllUsers from './pages/AllUsers'
 import EditUser from './pages/EditUser'
 import MoviesComponent from './pages/MoviesComponent'
-import CreateAcount from './pages/CreateAcount'
+import CreateAccount from './pages/CreateAccount'
 import Login from './pages/Login'
 
 
@@ -46,9 +46,9 @@ function App() {
         <Route path='all' element={<AllMovies/>}/>
       </Route>
 
-     <Route path='/login' element={<Login/>}>
-        <Route path='createAcount' element={<CreateAcount/>}/>
-    </Route>
+      <Route path='/login' element={<Login />}/>
+      <Route path='/createAccount' element={<CreateAccount />} />
+     
       <Route path="/edit" element={<EditMovie/>}/>
       <Route path='/subscriptions' element={<Subscriptions/>} />
       <Route path='/menagment' element={<UsersMenagment/>} >

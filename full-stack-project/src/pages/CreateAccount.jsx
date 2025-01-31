@@ -1,7 +1,9 @@
 import React from 'react'
 
-function CreateAcount() {
-
+function CreateAccount() {
+const create=async()=>{
+  
+}
   return (
     <div>
         <label htmlFor="">
@@ -15,4 +17,4 @@ function CreateAcount() {
   )
 }
 
-export default CreateAcount
+export default CreateAccount
